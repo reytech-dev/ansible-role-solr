@@ -19,4 +19,14 @@
       line: 'SOLR_PORT="{{ solr_port }}"'
     - regexp: "^.?SOLR_TIMEZONE="
       line: 'SOLR_TIMEZONE="{{ solr_timezone }}"'
+
+- name: Add env vars to {{ solr_config_file }}
+  lineinfile:
+    dest: "{{ solr_config_file }}"
+    line: "{{ item.line }}"
+    insertbefore: EOF
+    state: present
+  with_items:
+    - line: 'SOLR_JETTY_HOST="{{ solr_host }}"'
+    - line: 'SOLR_OPTS="-Djetty.host={{ solr_host }}"'
   notify: restart solr
